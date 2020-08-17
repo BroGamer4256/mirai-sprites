@@ -20,4 +20,9 @@ namespace mirai
         public string TextureData {get; set;}
         public string Name {get; set;}
     }
+
+    public struct Sprite
+    {
+        
+    }
 }
