@@ -120,7 +120,7 @@ namespace mirai
                 DataList.Add(StringHex(SpriteData[i].Name, 128));
                 DataList.Add(FloatString(SpriteData[i].X));
                 DataList.Add(FloatString(SpriteData[i].Y));
-                DataList.Add(FloatString(SpriteData[i].Y));
+                DataList.Add(FloatString(SpriteData[i].Z));
                 DataList.Add(FloatString(SpriteData[i].W));
                 DataList.Add(IntHex3(SpriteData[i].PX));
                 DataList.Add(IntHex3(SpriteData[i].PY));
@@ -179,11 +179,9 @@ namespace mirai
 
         public static string[] FloatString (float bitch)
         {
-            var sb = new StringBuilder();
             byte[] bytes = BitConverter.GetBytes(bitch);
-            foreach (byte b in bytes) 
-                sb.Append(b.ToString("X"));
-            string dummy = sb.ToString();
+            string dummy = BitConverter.ToString(bytes);
+            dummy = dummy.Replace("-", "");
             dummy = dummy.PadLeft(8, '0');
             string[] dummyA = {dummy.Substring(0,2), dummy.Substring(2,2), dummy.Substring(4,2), dummy.Substring(6,2)};
             return dummyA;
