@@ -10,6 +10,12 @@ namespace mirai
     {
         public static void Main(string[] args)
         {
+            if (args[0].EndsWith("Textures")
+            && File.GetAttributes(args[0]).HasFlag(FileAttributes.Directory))
+            {
+                Compress.FromFolder(args[0]);
+                Environment.Exit(0);
+            }
             if (args.Length == 0
             || !File.Exists(args[0])
             || !args[0].EndsWith(".bin"))
