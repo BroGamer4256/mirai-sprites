@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace mirai
 {
@@ -15,7 +17,7 @@ namespace mirai
             var tempHex = new List<string>();
             int tempCount = 0;
             var TextureData = new List<Texture>();
-            var SpriteData = new List<Sprite>();
+            var SpriteData = new List<object>();
 
             for (int i = 0; i < 8*4; i++)
             {
@@ -216,6 +218,25 @@ namespace mirai
                     PHeight = PHeight
                 });
             }
+
+            // Xml shit
+            var xmlWriterSettings = new XmlWriterSettings() { Indent = true };
+            var Unlock = new Unlock{ ObjectList = SpriteData, name =  "spriteData" };
+            var xsSubmit = new XmlSerializer(typeof(Unlock), new XmlRootAttribute("spriteData"));
+            string xml = "";
+            using (var sww = new StringWriter())
+            {
+                using (var writers = XmlWriter.Create(sww, xmlWriterSettings))
+                {
+                    xsSubmit.Serialize(writers, Unlock);
+                    xml = Convert.ToString(sww);
+                }
+            }
+            if (!File.Exists(@"Sprite_Data.xml"))
+                File.Create(@"Sprite_Data.xml");
+            GC.Collect();
+            xml = xml.Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\"?>");
+            File.WriteAllText(@"Sprite_Data.xml", xml);
         }
         
         public static byte[] StringToByteArray(string hex)
