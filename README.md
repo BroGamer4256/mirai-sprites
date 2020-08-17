@@ -1,2 +1,3 @@
 # mirai sprites
- Mirai Sprites Manager
+ Mirai Sprites to cptk
+ Made with help from samyuu
