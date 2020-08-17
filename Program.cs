@@ -10,18 +10,21 @@ namespace mirai
     {
         public static void Main(string[] args)
         {
-            if (args[0].EndsWith("Textures")
-            && File.GetAttributes(args[0]).HasFlag(FileAttributes.Directory))
+            if (File.GetAttributes(args[0]).HasFlag(FileAttributes.Directory))
             {
                 Compress.FromFolder(args[0]);
                 Environment.Exit(0);
             }
+            var FI = new FileInfo(args[0]);
+            string dir = Convert.ToString(FI.Name).Replace(".bin", "");
             if (args.Length == 0
             || !File.Exists(args[0])
-            || !args[0].EndsWith(".bin"))
+            || !args[0].EndsWith(".bin")
+            || !dir.StartsWith("spr_"))
                 throw new Exception();
-            if (!Directory.Exists("Textures"))
-                Directory.CreateDirectory("Textures");
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            dir += @"\\";
             var fs = new FileStream(args[0], FileMode.Open);
             var Textures = new List<string>();
             int hexIn;
@@ -112,7 +115,7 @@ namespace mirai
             for (int i = 0; i < TextureData.Count; i++)
             {
                 var Data = new List<byte>();
-                var BWriter = new BinaryWriter(File.OpenWrite(@"Textures\\" + TextureData[i].Name + ".ctpk"));
+                var BWriter = new BinaryWriter(File.OpenWrite(dir + TextureData[i].Name + ".ctpk"));
                 byte[] tempByte = StringToByteArray(TextureData[i].TextureData);
 
                 for (int j = 0; j < tempByte.Length; j++)
@@ -243,11 +246,12 @@ namespace mirai
                     xml = Convert.ToString(sww);
                 }
             }
-            if (!File.Exists(@"Textures\\Sprite_Data.xml"))
-                File.Create(@"Textures\\Sprite_Data.xml");
+            if (!File.Exists(dir + "Sprite_Data.xml"))
+                File.Create(dir + "Sprite_Data.xml");
             GC.Collect();
+            GC.WaitForPendingFinalizers();
             xml = xml.Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\"?>");
-            File.WriteAllText(@"Textures\\Sprite_Data.xml", xml);
+            File.WriteAllText(dir + "Sprite_Data.xml", xml);
         }
         
         public static byte[] StringToByteArray(string hex)

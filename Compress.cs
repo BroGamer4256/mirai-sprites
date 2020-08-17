@@ -194,6 +194,7 @@ namespace mirai
             string[] dummyA = {dummy.Substring(6,2), dummy.Substring(4,2), dummy.Substring(2,2), dummy.Substring(0,2)};
             return dummyA;
         }
+        
         public static string[] IntHex3 (int bitch)
         {
             string dummy = bitch.ToString("X");
