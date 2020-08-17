@@ -10,6 +10,10 @@ namespace mirai
     {
         public static void Main(string[] args)
         {
+            if (args.Length == 0
+            || !File.Exists(args[0])
+            || !args[0].EndsWith(".bin"))
+                throw new Exception();
             var fs = new FileStream(args[0], FileMode.Open);
             var Textures = new List<string>();
             int hexIn;
