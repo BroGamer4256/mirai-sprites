@@ -26,10 +26,10 @@ namespace mirai
         public int TexIndex {get; set;}
         public int Flags {get; set;}
         public string Name {get; set;}
-        public int X {get; set;}
-        public int Y {get; set;}
-        public int Z {get; set;}
-        public int W {get; set;}
+        public float X {get; set;}
+        public float Y {get; set;}
+        public float Z {get; set;}
+        public float W {get; set;}
         public int PX {get; set;}
         public int PY {get; set;}
         public int PWidth {get; set;}

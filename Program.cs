@@ -114,94 +114,108 @@ namespace mirai
 
 
             // Start sprite shit
-            // TO DO: 
-            // add for loop here
             fs.Seek(HeaderData.SprOffset, SeekOrigin.Begin);
-            // Get flags and texInd
-            int texInd = 0;
-            int flags = 0;
-            hex.Clear();
-
-            for (int i = 0; i < 2*4; i++)
+            for (int k = 0; k < HeaderData.SprCount; k++)
             {
-                hexIn = fs.ReadByte();
-                tempCount++;
-                tempHex.Add(string.Format("{0:X2}", hexIn));
-                if (tempCount == 4)
+                // Get flags and texInd
+                int texInd = 0;
+                int flags = 0;
+                hex.Clear();
+
+                for (int i = 0; i < 2*4; i++)
                 {
-                    hex.Add(tempHex[3] + tempHex[2] + tempHex[1] + tempHex[0]);
-                    tempCount = 0;
-                    tempHex.Clear();
+                    hexIn = fs.ReadByte();
+                    tempCount++;
+                    tempHex.Add(string.Format("{0:X2}", hexIn));
+                    if (tempCount == 4)
+                    {
+                        hex.Add(tempHex[3] + tempHex[2] + tempHex[1] + tempHex[0]);
+                        tempCount = 0;
+                        tempHex.Clear();
+                    }
                 }
-            }
-            texInd = Convert.ToInt32(hex[0], 16);
-            flags = Convert.ToInt32(hex[1], 16);
-            hex.Clear();
+                texInd = Convert.ToInt32(hex[0], 16);
+                flags = Convert.ToInt32(hex[1], 16);
+                hex.Clear();
 
-            // Get spr name 
-            var sprNames = new List<string>();
+                // Get spr name 
+                var sprNames = new List<string>();
 
-            for (int i = 0; i < 64; i++)
-            {
-                sprNames.Add(string.Format("{0:X2}", fs.ReadByte()) + " "); 
-            }
-            string sprString = String.Join(String.Empty, sprNames);
-            string[] sega = sprString.Split(' ', ' ');
-            sprNames.Clear();
-            for (int i = 0; i < 64 - 1; i++)
-            {
-                if (sega[i] == "00") continue;
-                int fucker = Convert.ToInt32(sega[i], 16);
-                sprNames.Add(Char.ConvertFromUtf32(fucker));
-            }
-            sprString = String.Join(String.Empty, sprNames);
+                for (int i = 0; i < 64; i++)
+                {
+                    sprNames.Add(string.Format("{0:X2}", fs.ReadByte()) + " "); 
+                }
+                string sprString = String.Join(String.Empty, sprNames);
+                string[] sega = sprString.Split(' ', ' ');
+                sprNames.Clear();
+                for (int i = 0; i < 64 - 1; i++)
+                {
+                    if (sega[i] == "00") continue;
+                    int fucker = Convert.ToInt32(sega[i], 16);
+                    sprNames.Add(Char.ConvertFromUtf32(fucker));
+                }
+                sprString = String.Join(String.Empty, sprNames);
             
-            // Get co-ords
-            var coords = new List<float>();
-            for (int i = 0; i < 4*4; i++)
-            {
-                hexIn = fs.ReadByte();
-                tempCount++;
-                tempHex.Add(string.Format("{0:X2}", hexIn));
-                if (tempCount == 4)
+                // Get co-ords
+                var coords = new List<float>();
+                for (int i = 0; i < 4*4; i++)
                 {
-                    hex.Add(tempHex[3] + tempHex[2] + tempHex[1] + tempHex[0]);
-                    tempCount = 0;
-                    tempHex.Clear();
+                    hexIn = fs.ReadByte();
+                    tempCount++;
+                    tempHex.Add(string.Format("{0:X2}", hexIn));
+                    if (tempCount == 4)
+                    {
+                        hex.Add(tempHex[3] + tempHex[2] + tempHex[1] + tempHex[0]);
+                        tempCount = 0;
+                        tempHex.Clear();
+                    }
                 }
-            }
-            for (int i = 0; i < hex.Count; i++)
-            {
-                byte[] bytes = BitConverter.GetBytes(Convert.ToInt32(hex[i], 16));
-                coords.Add(BitConverter.ToSingle(bytes, 0));
-            }
-            hex.Clear();
-
-            // Get Pixel values
-            int PX = 0;
-            int PY = 0;
-            int PWidth = 0;
-            int PHeight = 0;
-
-            for (int i = 0; i < 4*2; i++)
-            {
-                hexIn = fs.ReadByte();
-                tempCount++;
-                tempHex.Add(string.Format("{0:X2}", hexIn));
-                if (tempCount == 2)
+                for (int i = 0; i < hex.Count; i++)
                 {
-                    hex.Add(tempHex[1] + tempHex[0]);
-                    tempCount = 0;
-                    tempHex.Clear();
+                    byte[] bytes = BitConverter.GetBytes(Convert.ToInt32(hex[i], 16));
+                    coords.Add(BitConverter.ToSingle(bytes, 0));
                 }
-            }
+                hex.Clear();
 
-            PX = Convert.ToInt32(hex[0], 16);
-            PY = Convert.ToInt32(hex[1], 16);
-            PWidth = Convert.ToInt32(hex[2], 16);
-            PHeight = Convert.ToInt32(hex[3], 16);
-            hex.Clear();
-            Console.WriteLine(PWidth);
+                // Get Pixel values
+                int PX = 0;
+                int PY = 0;
+                int PWidth = 0;
+                int PHeight = 0;
+
+                for (int i = 0; i < 4*2; i++)
+                {
+                    hexIn = fs.ReadByte();
+                    tempCount++;
+                    tempHex.Add(string.Format("{0:X2}", hexIn));
+                    if (tempCount == 2)
+                    {
+                        hex.Add(tempHex[1] + tempHex[0]);
+                        tempCount = 0;
+                        tempHex.Clear();
+                    }
+                }
+
+                PX = Convert.ToInt32(hex[0], 16);
+                PY = Convert.ToInt32(hex[1], 16);
+                PWidth = Convert.ToInt32(hex[2], 16);
+                PHeight = Convert.ToInt32(hex[3], 16);
+
+                SpriteData.Add(new Sprite()
+                {
+                    TexIndex = texInd,
+                    Flags = flags,
+                    Name = sprString,
+                    X = coords[0],
+                    Y = coords[1],
+                    Z = coords[2],
+                    W = coords[3],
+                    PX = PX,
+                    PY = PY,
+                    PWidth = PWidth,
+                    PHeight = PHeight
+                });
+            }
         }
         
         public static byte[] StringToByteArray(string hex)

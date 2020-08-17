@@ -1,1 +1,1 @@
-mcs Program.cs Structs.cs
+mcs Program.cs Structs.cs XmlFix.cs
