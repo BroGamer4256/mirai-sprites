@@ -15,8 +15,10 @@ namespace mirai
                 Compress.FromFolder(args[0]);
                 Environment.Exit(0);
             }
+
             var FI = new FileInfo(args[0]);
             string dir = Convert.ToString(FI.Name).Replace(".bin", "");
+
             if (args.Length == 0
             || !File.Exists(args[0])
             || !args[0].EndsWith(".bin")
@@ -24,6 +26,7 @@ namespace mirai
                 throw new Exception();
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
+            
             dir += @"\\";
             var fs = new FileStream(args[0], FileMode.Open);
             var Textures = new List<string>();
@@ -248,8 +251,10 @@ namespace mirai
             }
             if (!File.Exists(dir + "Sprite_Data.xml"))
                 File.Create(dir + "Sprite_Data.xml");
+            
             GC.Collect();
             GC.WaitForPendingFinalizers();
+
             xml = xml.Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\"?>");
             File.WriteAllText(dir + "Sprite_Data.xml", xml);
         }
