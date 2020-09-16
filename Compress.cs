@@ -13,7 +13,7 @@ namespace mirai
         {
             var MainData = new List<byte>();
             var DataList = new List<string[]>();
-            var BWriter = new BinaryWriter(File.OpenWrite(@"spr.bin"));
+            var BWriter = new BinaryWriter(File.OpenWrite(folder + ".bin"));
 
             var SpriteData = new List<Sprite>();
             long SpriteOffset = 0;
